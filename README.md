@@ -45,13 +45,18 @@ $ ember deploy
 
 For detailed information on what plugin hooks are and how they work, please refer to the [Plugin Documentation][2].
 
-- `configure`
 - `upload`
 - `willActivate`
 - `activate`
 - `didDeploy`
 - `fetchInitialRevisions`
 - `fetchRevisions`
+
+## TODO
+
+- [ ] Better tests for `upload` hook
+- [ ] Add unit tests for `activate` and `fetchRevisions` hooks
+- [ ] Add HTTP-mocked tests for REST client
 
 ## Credits
 
