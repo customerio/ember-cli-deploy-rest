@@ -1,7 +1,7 @@
 {
   "name": "ember-cli-deploy-rest",
-  "version": "0.0.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "version": "1.0.0",
+  "description": "Ember CLI Deploy plugin to deploy index.html to a REST API.",
   "directories": {
     "doc": "doc",
     "test": "tests"
@@ -9,16 +9,18 @@
   "scripts": {
     "build": "ember build",
     "start": "ember server",
-    "test": "ember try:testall"
+    "test": "./node_modules/mocha/bin/mocha tests/unit/index-nodetest.js"
   },
-  "repository": "",
+  "repository": "https://github.com/customerio/ember-cli-deploy-rest",
   "engines": {
     "node": ">= 0.10.0"
   },
-  "author": "",
+  "author": "Alisdair McDiarmid",
   "license": "MIT",
   "devDependencies": {
     "broccoli-asset-rev": "^2.4.2",
+    "chai": "^3.5.0",
+    "chai-as-promised": "^5.3.0",
     "ember-ajax": "0.7.1",
     "ember-cli": "2.4.3",
     "ember-cli-app-version": "^1.0.0",
@@ -35,14 +37,20 @@
     "ember-export-application-global": "^1.0.5",
     "ember-load-initializers": "^0.5.1",
     "ember-resolver": "^2.0.3",
-    "ember-try": "^0.2.2",
-    "loader.js": "^4.0.1"
+    "glob": "^7.0.5",
+    "loader.js": "^4.0.1",
+    "mocha": "^2.5.3"
   },
   "keywords": [
-    "ember-addon"
+    "ember-addon",
+    "ember-cli-deploy-plugin"
   ],
   "dependencies": {
-    "ember-cli-babel": "^5.1.6"
+    "core-object": "^2.0.5",
+    "ember-cli-babel": "^5.1.6",
+    "ember-cli-deploy-plugin": "^0.2.6",
+    "request": "^2.72.0",
+    "rsvp": "^3.2.1"
   },
   "ember-addon": {
     "configPath": "tests/dummy/config"

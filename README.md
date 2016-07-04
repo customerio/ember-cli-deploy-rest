@@ -1,26 +1,56 @@
-# Ember-cli-deploy-rest
+# ember-cli-deploy-rest
 
-This README outlines the details of collaborating on this Ember addon.
+An ember-cli-deploy plugin to upload index.html files to a REST API. This is useful if you wrap your Ember app in a traditional web app, such as Rails.
 
-## Installation
+## API requirements
 
-* `git clone` this repository
-* `npm install`
-* `bower install`
+Your REST API should follow the spec below. Note that the base URL is configurable; for these examples we assume it's `https://yourapp.com/ember-revisions`.
 
-## Running
+- Authenticate with basic auth (please use HTTPS!)
+- `GET /ember-revisions`: returns a JSON array of objects for the stored revisions. Fields are `id` (revision key), `created_at` (upload timestamp), and `current` (boolean)
+- `POST /ember-revisions`: expects a JSON body with fields `id` (revision key) and `body` (the index.html contents)
+- `PUT /ember-revisions/<id>`: activates the revision with key `id`
 
-* `ember server`
-* Visit your app at http://localhost:4200.
+## Quick Start
 
-## Running Tests
+To get up and running quickly, do the following:
 
-* `npm test` (Runs `ember try:testall` to test your addon against multiple Ember versions)
-* `ember test`
-* `ember test --server`
+- Ensure [ember-cli-deploy-build][4] is installed and configured.
 
-## Building
+- Install this plugin
 
-* `ember build`
+```bash
+$ ember install ember-cli-deploy-rest
+```
 
-For more information on using ember-cli, visit [http://ember-cli.com/](http://ember-cli.com/).
+- Place the following configuration into `config/deploy.js`
+
+```javascript
+ENV.rest = {
+  baseUrl: 'https://yourapp.com/ember-revisions',
+  username: '<your-deploy-username>'
+  password: '<your-deploy-password>'
+}
+```
+
+- Run the pipeline
+
+```bash
+$ ember deploy
+```
+
+## ember-cli-deploy Hooks Implemented
+
+For detailed information on what plugin hooks are and how they work, please refer to the [Plugin Documentation][2].
+
+- `configure`
+- `upload`
+- `willActivate`
+- `activate`
+- `didDeploy`
+- `fetchInitialRevisions`
+- `fetchRevisions`
+
+## Credits
+
+Inspired by and based on [ember-cli-redis](https://github.com/ember-cli-deploy/ember-cli-deploy-redis) by Aaron Chambers and the ember-cli-deploy team. Thanks!
