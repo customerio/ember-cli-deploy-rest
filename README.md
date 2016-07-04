@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/customerio/ember-cli-deploy-rest.svg?branch=master)](https://travis-ci.org/customerio/ember-cli-deploy-rest)
+
 # ember-cli-deploy-rest
 
 An ember-cli-deploy plugin to upload index.html files to a REST API. This is useful if you wrap your Ember app in a traditional web app, such as Rails.
