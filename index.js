@@ -49,16 +49,17 @@ module.exports = {
       requiredConfig: ['baseUrl', 'username', 'password'],
 
       upload: function(context) {
-        var restClient  = this.readConfig('restClient');
-        var revisionKey = this.readConfig('revisionKey');
-        var distDir     = this.readConfig('distDir');
-        var filePattern = this.readConfig('filePattern');
-        var keyPrefix   = this.readConfig('keyPrefix');
-        var filePath    = path.join(distDir, filePattern);
+        var restClient   = this.readConfig('restClient');
+        var revisionKey  = this.readConfig('revisionKey');
+        var distDir      = this.readConfig('distDir');
+        var filePattern  = this.readConfig('filePattern');
+        var keyPrefix    = this.readConfig('keyPrefix');
+        var revisionData = this.readConfig('revisionData');
+        var filePath     = path.join(distDir, filePattern);
 
         this.log('Uploading `' + filePath + '`', { verbose: true });
         return this._readFileContents(filePath)
-          .then(restClient.upload.bind(restClient, keyPrefix, revisionKey))
+          .then(restClient.upload.bind(restClient, keyPrefix, revisionKey, revisionData))
           .then(this._uploadSuccessMessage.bind(this))
           .then(function(key) {
             return { key: key };
