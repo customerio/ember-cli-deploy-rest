@@ -9,7 +9,7 @@ An ember-cli-deploy plugin to upload index.html files to a REST API. This is use
 Your REST API should follow the spec below. Note that the base URL is configurable; for these examples we assume it's `https://yourapp.com/ember-revisions`.
 
 - Authenticate with basic auth (please use HTTPS!)
-- `GET /ember-revisions`: returns a JSON array of objects for the stored revisions. Fields are `id` (revision key), `created_at` (upload timestamp), and `current` (boolean)
+- `GET /ember-revisions`: returns a JSON array of objects for the stored revisions. Fields are `id` (revision key), `created_at` (upload timestamp), `revision_data` (usually contains revision metadata) and `current` (boolean)
 - `POST /ember-revisions`: expects a JSON body with fields `id` (revision key) and `body` (the index.html contents)
 - `PUT /ember-revisions/<id>`: activates the revision with key `id`
 
