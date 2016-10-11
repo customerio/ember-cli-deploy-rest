@@ -46,7 +46,7 @@ module.exports = {
         }
       },
 
-      requiredConfig: ['baseUrl', 'username', 'password'],
+      requiredConfig: ['baseUrl'],
 
       upload: function(context) {
         var restClient  = this.readConfig('restClient');
