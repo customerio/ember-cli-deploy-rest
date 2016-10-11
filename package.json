@@ -1,6 +1,6 @@
 {
   "name": "ember-cli-deploy-rest",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Ember CLI Deploy plugin to deploy index.html to a REST API.",
   "directories": {
     "doc": "doc",
