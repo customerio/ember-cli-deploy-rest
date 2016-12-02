@@ -39,7 +39,7 @@ module.exports = {
           return context.commandOptions.revision || (context.revisionData && context.revisionData.revisionKey);
         },
         restClient: function(context) {
-          return new RestClient(this.pluginConfig);
+          return new RestClient(this);
         },
         revisionData: function(context) {
           return context.revisionData;
