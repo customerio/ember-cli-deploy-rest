@@ -1,5 +1,5 @@
-/* jshint node: true */
-/* jshint jasmine: true */
+/* eslint-env node */
+/* eslint-env jasmine */
 'use strict';
 
 var Promise = require('rsvp').Promise;
@@ -63,7 +63,7 @@ describe('ember-cli-deploy-rest', function() {
             username: 'user',
             password: 'secret',
             revisionKey: '123abc',
-            restClient: function(context) {
+            restClient: function(/*context*/) {
               return {
                 upload: function(keyPrefix, revisionKey) {
                   return Promise.resolve(keyPrefix + ':' + revisionKey);
