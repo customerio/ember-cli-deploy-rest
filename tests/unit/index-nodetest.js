@@ -2,7 +2,7 @@
 /* jshint jasmine: true */
 'use strict';
 
-var Promise = require('ember-cli/lib/ext/promise');
+var Promise = require('rsvp').Promise;
 var assert  = require('../helpers/assert');
 
 var stubProject = {
