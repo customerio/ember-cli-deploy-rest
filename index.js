@@ -1,9 +1,9 @@
 /* jshint node: true */
 'use strict';
 
-var RSVP = require('rsvp');
-var path = require('path');
-var fs   = require('fs');
+var Promise = require('rsvp').Promise;
+var path    = require('path');
+var fs      = require('fs');
 
 var denodeify = require('rsvp').denodeify;
 var readFile  = denodeify(fs.readFile);
@@ -86,7 +86,7 @@ module.exports = {
         var keyPrefix   = this.readConfig('keyPrefix');
 
         this.log('Activating revision `' + revisionKey + '`', { verbose: true });
-        return RSVP.resolve(restClient.activate(keyPrefix, revisionKey))
+        return Promise.resolve(restClient.activate(keyPrefix, revisionKey))
           .then(this.log.bind(this, '✔ Activated revision `' + revisionKey + '`', {}))
           .then(function(){
             return {
@@ -109,7 +109,7 @@ module.exports = {
         var restClient = this.readConfig('restClient');
         var keyPrefix = this.readConfig('keyPrefix');
         this.log('Listing initial revisions for key: `' + keyPrefix + '`', { verbose: true });
-        return RSVP.resolve(restClient.fetchRevisions(keyPrefix))
+        return Promise.resolve(restClient.fetchRevisions(keyPrefix))
           .then(function(revisions) {
             return {
               initialRevisions: revisions
@@ -136,12 +136,12 @@ module.exports = {
 
       _uploadSuccessMessage: function(key) {
         this.log('Uploaded with key `' + key + '`', { verbose: true });
-        return RSVP.resolve(key);
+        return Promise.resolve(key);
       },
 
       _errorMessage: function(error) {
         this.log(error, { color: 'red' });
-        return RSVP.reject(error);
+        return Promise.reject(error);
       }
     });
 
