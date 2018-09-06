@@ -1,9 +1,9 @@
 /* jshint node: true */
 'use strict';
 
-var Promise   = require('ember-cli/lib/ext/promise');
-var path      = require('path');
-var fs        = require('fs');
+var Promise = require('rsvp').Promise;
+var path    = require('path');
+var fs      = require('fs');
 
 var denodeify = require('rsvp').denodeify;
 var readFile  = denodeify(fs.readFile);
