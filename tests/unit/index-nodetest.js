@@ -1,42 +1,43 @@
-/* jshint node: true */
-/* jshint jasmine: true */
-'use strict';
+/* eslint-env node */
+"use strict";
 
-var Promise = require('ember-cli/lib/ext/promise');
-var assert  = require('../helpers/assert');
+const RSVP = require("rsvp");
+const assert = require("../helpers/assert");
+const subject = require("../../index");
 
-var stubProject = {
-  name: function(){
-    return 'my-project';
-  }
+const Promise = RSVP.Promise;
+
+const stubProject = {
+  name() {
+    return "my-project";
+  },
 };
 
-describe('ember-cli-deploy-rest', function() {
-  var subject, mockUi;
+describe("ember-cli-deploy-rest", function () {
+  let mockUi;
 
-  beforeEach(function() {
-    subject = require('../../index');
+  beforeEach(function () {
     mockUi = {
       verbose: true,
       messages: [],
-      write: function() { },
-      writeLine: function(message) {
+      write: function () {},
+      writeLine: function (message) {
         this.messages.push(message);
-      }
+      },
     };
   });
 
-  it('has a name', function() {
-    var result = subject.createDeployPlugin({
-      name: 'rest'
+  it("has a name", function () {
+    let result = subject.createDeployPlugin({
+      name: "rest",
     });
 
-    assert.equal(result.name, 'rest');
+    assert.equal(result.name, "rest");
   });
 
-  it('implements the correct hooks', function() {
-    var plugin = subject.createDeployPlugin({
-      name: 'rest'
+  it("implements the correct hooks", function () {
+    let plugin = subject.createDeployPlugin({
+      name: "rest",
     });
     assert.ok(plugin.upload);
     assert.ok(plugin.activate);
@@ -45,41 +46,40 @@ describe('ember-cli-deploy-rest', function() {
     assert.ok(plugin.willActivate);
   });
 
-  describe('upload hook', function() {
-    var plugin;
-    var context;
+  describe("upload hook", function () {
+    let plugin = null;
+    let context = null;
 
-    it('calls the hook', function() {
-      plugin = subject.createDeployPlugin({ name: 'rest' });
+    it("calls the hook", function () {
+      plugin = subject.createDeployPlugin({ name: "rest" });
       context = {
         ui: mockUi,
         project: stubProject,
         config: {
           rest: {
-            keyPrefix: 'test-prefix',
-            distDir: 'tests',
-            filePattern: 'index.html',
-            baseUrl: 'http://localhost/indices',
-            username: 'user',
-            password: 'secret',
-            revisionKey: '123abc',
-            restClient: function(context) {
+            keyPrefix: "test-prefix",
+            distDir: "tests",
+            filePattern: "index.html",
+            baseUrl: "http://localhost/indices",
+            username: "user",
+            password: "secret",
+            revisionKey: "123abc",
+            restClient: function () {
               return {
-                upload: function(keyPrefix, revisionKey) {
-                  return Promise.resolve(keyPrefix + ':' + revisionKey);
-                }
+                upload: function (keyPrefix, revisionKey) {
+                  return Promise.resolve(keyPrefix + ":" + revisionKey);
+                },
               };
-            }
-          }
-        }
+            },
+          },
+        },
       };
       plugin.beforeHook(context);
       plugin.configure(context);
 
-      return assert.isFulfilled(plugin.upload(context))
-        .then(function(result) {
-          assert.deepEqual(result, { key: 'test-prefix:123abc' });
-        });
+      return assert.isFulfilled(plugin.upload(context)).then(function (result) {
+        assert.deepEqual(result, { key: "test-prefix:123abc" });
+      });
     });
   });
 });
