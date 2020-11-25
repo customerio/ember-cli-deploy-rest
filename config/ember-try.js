@@ -1,6 +1,6 @@
 "use strict";
 
-const RSVP = require("RSVP");
+const RSVP = require("rsvp");
 const getChannelURL = require("ember-source-channel-url");
 
 module.exports = function () {
