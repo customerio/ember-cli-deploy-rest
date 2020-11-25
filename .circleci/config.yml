@@ -42,6 +42,6 @@ jobs:
       - run: npm run test -- -r=dot
 
 workflows:
-  build_and_deploy:
+  test:
     jobs:
       - test
