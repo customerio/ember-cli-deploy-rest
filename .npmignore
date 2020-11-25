@@ -1,9 +1,7 @@
-/bower_components
 /dist
 /tests
 /tmp
 **/.gitkeep
-.bowerrc
 .editorconfig
 .eslintrc.js
 .gitignore
