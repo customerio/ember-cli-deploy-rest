@@ -1,21 +1,46 @@
 language: node_js
 node_js:
-- stable
+  # we recommend testing addons with the same minimum supported node version as Ember CLI
+  # so that your addon works for all apps
+  - "4"
+
 sudo: false
+dist: trusty
+
+addons:
+  chrome: stable
+
 cache:
   directories:
-  - node_modules
+    - $HOME/.npm
+
+env:
+  global:
+    # See https://git.io/vdao3 for details.
+    - JOBS=1
+  matrix:
+    # we recommend new addons test the current and previous LTS
+    # as well as latest stable release (bonus points to beta/canary)
+    - EMBER_TRY_SCENARIO=ember-lts-2.12
+    - EMBER_TRY_SCENARIO=ember-lts-2.16
+    - EMBER_TRY_SCENARIO=ember-lts-2.18
+    - EMBER_TRY_SCENARIO=ember-release
+    - EMBER_TRY_SCENARIO=ember-beta
+    - EMBER_TRY_SCENARIO=ember-canary
+    - EMBER_TRY_SCENARIO=ember-default
+
+matrix:
+  fast_finish: true
+  allow_failures:
+    - env: EMBER_TRY_SCENARIO=ember-canary
+
 before_install:
-- npm config set spin false
-- npm install -g npm@^2
-install:
-- npm install -g bower
-- npm install
-- bower install
+  - npm config set spin false
+  - npm install -g npm@4
+  - npm --version
+
 script:
-- npm test
-notifications:
-  email: false
-  slack:
-    rooms:
-      secure: WShDyt/M/6jBOTCEQhkJLe2pT0WzyjtBz4hWjDlABaNCYTUwqkkhiQJR9As6FuSvCHxh58bMcdPYolNW6glzY3IBV5YFojHZoehtUx7IRaOg722UEHJqm1cPhr5PXMPHUhcq3l8elpx0Vqv752gxlMyS+mjYywVvwgOjvVbs2BxpCJLsKcBHl78XZ2DVHobfi0ff5KwFd4jYnzt2BN9tK/HizC51OnRHbBj14bN4lPpgxvHTLLKjxLM2sVRXzusjgk6ETiODYibLWfYqRXHOdfDgIio2/F7F0daL91Pr2f4pDsAyFoUUB9q6HsozOsRB0ywLsjDba0DQhHupIro9JRNfj2/0sC8fjManUd9r1ws8H5xvJ1vAEk1autvzb1HYZGAuY86MY4LHeqK7V25pb1a51+ao5JnqBPl/5aHb1Z3OTmueWYc20o2rj0R40Vks2PjaUfJMKt6E4/1dW0mMrGOXnuE0hE6TvzZOKdsJgtz9FdfVWQOXliQ0T28rzH4PzdO7ma0G4wDQ3KNiQ6kE+DRi1KJ9oCgWzLdQQMcmo8nNS7mQAML3J0HAUAuHktbTIiivnJGbB0h3DnDJh7nfdqev4cRP8ZqZOufcsID9EfPzKn5CR8QBivMYDbVeN/hvrQorG6w8hLJ3QAyN96IbU9sS9l9YbDwf+5F5qMsjScs=
+  - npm run lint:js
+  # Usually, it's ok to finish the test scenario without reverting
+  #  to the addon's original dependency state, skipping "cleanup".
+  - node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO --skip-cleanup
