@@ -1,25 +1,25 @@
 /* eslint-env node */
-"use strict";
+'use strict';
 
-var Promise = require("rsvp").Promise;
-var path = require("path");
-var fs = require("fs");
+var Promise = require('rsvp').Promise;
+var path = require('path');
+var fs = require('fs');
 
-var denodeify = require("rsvp").denodeify;
+var denodeify = require('rsvp').denodeify;
 var readFile = denodeify(fs.readFile);
 
-var DeployPluginBase = require("ember-cli-deploy-plugin");
+var DeployPluginBase = require('ember-cli-deploy-plugin');
 
 module.exports = {
-  name: "ember-cli-deploy-rest",
+  name: 'ember-cli-deploy-rest',
 
   createDeployPlugin: function (options) {
-    var RestClient = require("./lib/rest-client");
+    var RestClient = require('./lib/rest-client');
 
     var DeployPlugin = DeployPluginBase.extend({
       name: options.name,
       defaultConfig: {
-        filePattern: "index.html",
+        filePattern: 'index.html',
         distDir: function (context) {
           return context.distDir;
         },
@@ -27,29 +27,24 @@ module.exports = {
           return context.project.name();
         },
         didDeployMessage: function (context) {
-          var revisionKey =
-            context.revisionData && context.revisionData.revisionKey;
-          var activatedRevisionKey =
-            context.revisionData && context.revisionData.activatedRevisionKey;
+          var revisionKey = context.revisionData && context.revisionData.revisionKey;
+          var activatedRevisionKey = context.revisionData && context.revisionData.activatedRevisionKey;
           if (revisionKey && !activatedRevisionKey) {
             return (
-              "Deployed but did not activate revision " +
+              'Deployed but did not activate revision ' +
               revisionKey +
-              ". " +
-              "To activate, run: " +
-              "ember deploy:activate " +
+              '. ' +
+              'To activate, run: ' +
+              'ember deploy:activate ' +
               context.deployTarget +
-              " --revision=" +
+              ' --revision=' +
               revisionKey +
-              "\n"
+              '\n'
             );
           }
         },
         revisionKey: function (context) {
-          return (
-            context.commandOptions.revision ||
-            (context.revisionData && context.revisionData.revisionKey)
-          );
+          return context.commandOptions.revision || (context.revisionData && context.revisionData.revisionKey);
         },
         restClient: function () {
           return new RestClient(this);
@@ -59,27 +54,20 @@ module.exports = {
         },
       },
 
-      requiredConfig: ["baseUrl", "username", "password"],
+      requiredConfig: ['baseUrl', 'username', 'password'],
 
       upload: function () {
-        var restClient = this.readConfig("restClient");
-        var revisionKey = this.readConfig("revisionKey");
-        var distDir = this.readConfig("distDir");
-        var filePattern = this.readConfig("filePattern");
-        var keyPrefix = this.readConfig("keyPrefix");
-        var revisionData = this.readConfig("revisionData");
+        var restClient = this.readConfig('restClient');
+        var revisionKey = this.readConfig('revisionKey');
+        var distDir = this.readConfig('distDir');
+        var filePattern = this.readConfig('filePattern');
+        var keyPrefix = this.readConfig('keyPrefix');
+        var revisionData = this.readConfig('revisionData');
         var filePath = path.join(distDir, filePattern);
 
-        this.log("Uploading `" + filePath + "`", { verbose: true });
+        this.log('Uploading `' + filePath + '`', { verbose: true });
         return this._readFileContents(filePath)
-          .then(
-            restClient.upload.bind(
-              restClient,
-              keyPrefix,
-              revisionKey,
-              revisionData
-            )
-          )
+          .then(restClient.upload.bind(restClient, keyPrefix, revisionKey, revisionData))
           .then(this._uploadSuccessMessage.bind(this))
           .then(function (key) {
             return { key: key };
@@ -88,8 +76,8 @@ module.exports = {
       },
 
       willActivate: function (/* context */) {
-        var restClient = this.readConfig("restClient");
-        var keyPrefix = this.readConfig("keyPrefix");
+        var restClient = this.readConfig('restClient');
+        var keyPrefix = this.readConfig('keyPrefix');
 
         var revisionKey = restClient.activeRevision(keyPrefix);
 
@@ -101,21 +89,15 @@ module.exports = {
       },
 
       activate: function (/* context */) {
-        var restClient = this.readConfig("restClient");
-        var revisionKey = this.readConfig("revisionKey");
-        var keyPrefix = this.readConfig("keyPrefix");
+        var restClient = this.readConfig('restClient');
+        var revisionKey = this.readConfig('revisionKey');
+        var keyPrefix = this.readConfig('keyPrefix');
 
-        this.log("Activating revision `" + revisionKey + "`", {
+        this.log('Activating revision `' + revisionKey + '`', {
           verbose: true,
         });
         return Promise.resolve(restClient.activate(keyPrefix, revisionKey))
-          .then(
-            this.log.bind(
-              this,
-              "✔ Activated revision `" + revisionKey + "`",
-              {}
-            )
-          )
+          .then(this.log.bind(this, '✔ Activated revision `' + revisionKey + '`', {}))
           .then(function () {
             return {
               revisionData: {
@@ -127,16 +109,16 @@ module.exports = {
       },
 
       didDeploy: function (/* context */) {
-        var didDeployMessage = this.readConfig("didDeployMessage");
+        var didDeployMessage = this.readConfig('didDeployMessage');
         if (didDeployMessage) {
           this.log(didDeployMessage);
         }
       },
 
       fetchInitialRevisions: function (/* context */) {
-        var restClient = this.readConfig("restClient");
-        var keyPrefix = this.readConfig("keyPrefix");
-        this.log("Listing initial revisions for key: `" + keyPrefix + "`", {
+        var restClient = this.readConfig('restClient');
+        var keyPrefix = this.readConfig('keyPrefix');
+        this.log('Listing initial revisions for key: `' + keyPrefix + '`', {
           verbose: true,
         });
         return Promise.resolve(restClient.fetchRevisions(keyPrefix))
@@ -149,13 +131,11 @@ module.exports = {
       },
 
       fetchRevisions: function (/* context */) {
-        var restClient = this.readConfig("restClient");
-        var keyPrefix = this.readConfig("keyPrefix");
+        var restClient = this.readConfig('restClient');
+        var keyPrefix = this.readConfig('keyPrefix');
 
-        this.log("Listing revisions for key: `" + keyPrefix + "`");
-        return restClient
-          .fetchRevisions(keyPrefix)
-          .catch(this._errorMessage.bind(this));
+        this.log('Listing revisions for key: `' + keyPrefix + '`');
+        return restClient.fetchRevisions(keyPrefix).catch(this._errorMessage.bind(this));
       },
 
       _readFileContents: function (path) {
@@ -165,12 +145,12 @@ module.exports = {
       },
 
       _uploadSuccessMessage: function (key) {
-        this.log("Uploaded with key `" + key + "`", { verbose: true });
+        this.log('Uploaded with key `' + key + '`', { verbose: true });
         return Promise.resolve(key);
       },
 
       _errorMessage: function (error) {
-        this.log(error, { color: "red" });
+        this.log(error, { color: 'red' });
         return Promise.reject(error);
       },
     });
