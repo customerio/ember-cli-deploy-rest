@@ -1,0 +1,47 @@
+version: 2.1
+
+references:
+  update_configuration: &update_configuration
+    run:
+      name: Update Configuration
+      command: |
+        echo 'export JOBS=1' >> $BASH_ENV
+        echo 'export NODE_OPTIONS="--max_old_space_size=4096"' >> $BASH_ENV
+        echo 'PATH=$CIRCLE_WORKING_DIRECTORY/node_modules/.bin:$PATH' >> $BASH_ENV
+        git config --global url."https://".insteadOf git://
+        echo -e "machine github.com\n  login $CI_USER_TOKEN" >> ~/.netrc
+
+commands:
+  npm-prepare:
+    description: "Prepare npm by restoring deps from cache or installing"
+    steps:
+      - restore_cache:
+          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+          key: v1-deps-{{ .Branch }}-{{ checksum "package-lock.json" }}
+
+      - run: npm install
+
+      - save_cache: # cache Python dependencies using checksum of package-lock.json as the cache-key
+          key: v1-deps-{{ .Branch }}-{{ checksum "package-lock.json" }}
+          paths:
+            - "~/.npm"
+            - "~/ember-cli-deploy-rest/node_modules"
+
+jobs:
+  test:
+    docker:
+      - image: circleci/node:12-browsers
+
+    working_directory: ~/ember-cli-deploy-rest
+    steps:
+      - checkout
+      - *update_configuration
+      - npm-prepare
+
+      - run: npm run lint:js
+      - run: npm run test -- -r=dot
+
+workflows:
+  test:
+    jobs:
+      - test
