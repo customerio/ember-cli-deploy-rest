@@ -5,7 +5,7 @@ on: [ push ]
 jobs:
   test:
     container: circleci/node:12-browsers
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     env:
       CI_SECRET: ${{ secrets.CI_USER_TOKEN}}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_CI_BOT_URL }}
@@ -17,7 +17,8 @@ jobs:
     steps:
       - name: Setup file system permissions
         run: |
-          mkdir -pv $GITHUB_WORKSPACE /github /__w/_temp
+          sudo mkdir -pv $GITHUB_WORKSPACE /github /__w/_temp
+          sudo chmod 777 -R $GITHUB_WORKSPACE /github /__w/_temp
       - uses: actions/checkout@v2
       - name: Update Configuration
         run: |
