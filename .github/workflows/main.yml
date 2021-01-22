@@ -37,7 +37,7 @@ jobs:
   report_workflow_status:
     if: always()
     needs:
-      - build
+      - test
     runs-on: self-hosted
     defaults:
       run:
