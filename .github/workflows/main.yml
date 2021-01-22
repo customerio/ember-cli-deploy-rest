@@ -4,8 +4,8 @@ on: [ push ]
 
 jobs:
   test:
-    container: us.gcr.io/shared-services-292705/node-git:chrome
-    runs-on: self-hosted
+    container: circleci/node:12-browsers
+    runs-on: ubuntu-latest
     env:
       CI_SECRET: ${{ secrets.CI_USER_TOKEN}}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_CI_BOT_URL }}
@@ -38,7 +38,7 @@ jobs:
     if: always()
     needs:
       - test
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
