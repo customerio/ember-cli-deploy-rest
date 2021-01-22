@@ -1,0 +1,51 @@
+name: test
+
+on: [ push ]
+
+jobs:
+  test:
+    container: us.gcr.io/shared-services-292705/node-git:chrome
+    runs-on: self-hosted
+    env:
+      CI_SECRET: ${{ secrets.CI_USER_TOKEN}}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_CI_BOT_URL }}
+      JOBS: 1
+      NODE_OPTIONS: "--max_old_space_size=4096"
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Setup file system permissions
+        run: |
+          mkdir -pv $GITHUB_WORKSPACE /github /__w/_temp
+      - uses: actions/checkout@v2
+      - name: Update Configuration
+        run: |
+          git config --global url."https://".insteadOf git://
+          echo -e "machine github.com\n  login $CI_SECRET" >> ~/.netrc
+      - name: npm install
+        run: | 
+          npm install 
+      - name: npm lint 
+        run: |
+          export PATH="${GITHUB_WORKSPACE}/node_modules/.bin:$PATH"
+          npm run lint:js
+      - name: npm test 
+        run: |
+          export PATH="${GITHUB_WORKSPACE}/node_modules/.bin:$PATH"
+          npm run test -- -r=dot
+  report_workflow_status:
+    if: always()
+    needs:
+      - build
+    runs-on: self-hosted
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Slack Workflow Notification
+        uses: Gamesight/slack-workflow-status@master
+        with:
+          repo_token: ${{secrets.GITHUB_TOKEN}}
+          slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_CI_BOT_URL }}
+          name: "Github Actions"
