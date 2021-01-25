@@ -7,7 +7,6 @@ jobs:
     container: circleci/node:12-browsers
     runs-on: ubuntu-18.04
     env:
-      # CI_SECRET: 
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_CI_BOT_URL }}
       JOBS: 1
       NODE_OPTIONS: "--max_old_space_size=4096"
@@ -20,10 +19,6 @@ jobs:
           sudo mkdir -pv $GITHUB_WORKSPACE /github /__w/_temp
           sudo chmod 777 -R $GITHUB_WORKSPACE /github /__w/_temp
       - uses: actions/checkout@v2
-      # - name: Update Configuration
-      #   run: |
-      #     git config --global url."https://".insteadOf git://
-      #     echo -e "machine github.com\n  login $CI_SECRET" >> ~/.netrc
       - name: npm install
         run: | 
           npm install 
