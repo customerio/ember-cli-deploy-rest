@@ -20,20 +20,20 @@
   "repository": "https://github.com/customerio/ember-cli-deploy-rest",
   "license": "MIT",
   "dependencies": {
-    "core-object": "^2.0.5",
+    "core-object": "^3.1.5",
     "ember-cli-deploy-plugin": "0.2.9",
     "request": "^2.72.0",
-    "rsvp": "^3.2.1"
+    "rsvp": "^4.8.5"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
-    "chai-as-promised": "^5.3.0",
-    "ember-cli": "~3.0.4",
-    "eslint": "^7.0.0",
-    "eslint-plugin-ember": "^5.0.0",
-    "eslint-plugin-node": "^6.0.1",
-    "glob": "^7.0.5",
-    "mocha": "^7.1.2"
+    "chai": "^4.3.4",
+    "chai-as-promised": "^7.1.1",
+    "ember-cli": "^3.27.0",
+    "eslint": "^7.32.0",
+    "eslint-plugin-ember": "^10.5.5",
+    "eslint-plugin-node": "^11.1.0",
+    "glob": "^7.2.0",
+    "mocha": "^9.1.2"
   },
   "engines": {
     "node": ">= 12.*"
