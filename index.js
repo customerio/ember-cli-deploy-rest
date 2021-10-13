@@ -18,6 +18,7 @@ module.exports = {
 
     var DeployPlugin = DeployPluginBase.extend({
       name: options.name,
+      // eslint-disable-next-line ember/avoid-leaking-state-in-ember-objects
       defaultConfig: {
         filePattern: 'index.html',
         distDir: function (context) {
@@ -54,6 +55,7 @@ module.exports = {
         },
       },
 
+      // eslint-disable-next-line ember/avoid-leaking-state-in-ember-objects
       requiredConfig: ['baseUrl', 'username', 'password'],
 
       upload: function () {

@@ -1,6 +1,6 @@
 name: test
 
-on: [ push ]
+on: [push]
 
 jobs:
   test:
@@ -20,28 +20,13 @@ jobs:
           sudo chmod 777 -R $GITHUB_WORKSPACE /github /__w/_temp
       - uses: actions/checkout@v2
       - name: npm install
-        run: | 
-          npm install 
-      - name: npm lint 
+        run: |
+          npm install
+      - name: npm lint
         run: |
           export PATH="${GITHUB_WORKSPACE}/node_modules/.bin:$PATH"
           npm run lint:js
-      - name: npm test 
+      - name: npm test
         run: |
           export PATH="${GITHUB_WORKSPACE}/node_modules/.bin:$PATH"
           npm run test -- -r=dot
-  report_workflow_status:
-    if: always()
-    needs:
-      - test
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
-    steps:
-      - name: Slack Workflow Notification
-        uses: Gamesight/slack-workflow-status@master
-        with:
-          repo_token: ${{secrets.GITHUB_TOKEN}}
-          slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_CI_BOT_URL }}
-          name: "Github Actions"

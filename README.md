@@ -58,6 +58,8 @@ For detailed information on what plugin hooks are and how they work, please refe
 - [ ] Add unit tests for `activate` and `fetchRevisions` hooks
 - [ ] Add HTTP-mocked tests for REST client
 
+See the [Contributing](CONTRIBUTING.md) guide for details.
+
 ## Credits
 
 Inspired by and based on [ember-cli-redis](https://github.com/ember-cli-deploy/ember-cli-deploy-redis) by Aaron Chambers and the ember-cli-deploy team. Thanks!
