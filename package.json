@@ -29,7 +29,6 @@
     "rsvp": "^4.8.5"
   },
   "devDependencies": {
-    "@embroider/test-setup": "^0.41.0",
     "babel-eslint": "^10.1.0",
     "chai": "^4.3.4",
     "chai-as-promised": "^7.1.1",

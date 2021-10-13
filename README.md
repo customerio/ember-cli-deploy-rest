@@ -4,12 +4,6 @@
 
 An ember-cli-deploy plugin to upload index.html files to a REST API. This is useful if you wrap your Ember app in a traditional web app, such as Rails.
 
-## Compatibility
-
-* Ember.js v3.20 or above
-* Ember CLI v3.20 or above
-* Node.js v10 or above
-
 ## API requirements
 
 Your REST API should follow the spec below. Note that the base URL is configurable; for these examples we assume it's `https://yourapp.com/ember-revisions`.
