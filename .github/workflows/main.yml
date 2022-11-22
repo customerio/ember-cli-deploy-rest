@@ -30,11 +30,8 @@ jobs:
           restore-keys: |
             ember-cli-deploy-rest-${{ matrix.node }}
       - name: npm install
-        run: |
-          npm ci
+        run: npm ci
       - name: npm lint
-        run: |
-          npm run lint:js
+        run: npm run lint:js
       - name: npm test
-        run: |
-          npm run test -- -r=dot
+        run: npm run test -- -r=dot
