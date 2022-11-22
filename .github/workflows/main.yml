@@ -14,19 +14,13 @@ jobs:
       run:
         shell: bash
     steps:
-      - name: Setup file system permissions
-        run: |
-          sudo mkdir -pv $GITHUB_WORKSPACE /github /__w/_temp
-          sudo chmod 777 -R $GITHUB_WORKSPACE /github /__w/_temp
       - uses: actions/checkout@v2
       - name: npm install
         run: |
           npm install
       - name: npm lint
         run: |
-          export PATH="${GITHUB_WORKSPACE}/node_modules/.bin:$PATH"
           npm run lint:js
       - name: npm test
         run: |
-          export PATH="${GITHUB_WORKSPACE}/node_modules/.bin:$PATH"
           npm run test -- -r=dot
