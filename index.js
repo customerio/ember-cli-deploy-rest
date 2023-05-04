@@ -18,8 +18,12 @@ module.exports = {
 
     var DeployPlugin = DeployPluginBase.extend({
       name: options.name,
+
       // eslint-disable-next-line ember/avoid-leaking-state-in-ember-objects
       defaultConfig: {
+        useHydra: false,
+        useBearerToken: false,
+        bearer: undefined,
         filePattern: 'index.html',
         distDir: function (context) {
           return context.distDir;
@@ -59,29 +63,43 @@ module.exports = {
       requiredConfig: ['baseUrl', 'username', 'password'],
 
       upload: function () {
+        var useHydra = this.readConfig('useHydra');
         var restClient = this.readConfig('restClient');
         var revisionKey = this.readConfig('revisionKey');
         var distDir = this.readConfig('distDir');
         var filePattern = this.readConfig('filePattern');
         var keyPrefix = this.readConfig('keyPrefix');
         var revisionData = this.readConfig('revisionData');
+        var appName = this.readConfig('appName');
         var filePath = path.join(distDir, filePattern);
 
         this.log('Uploading `' + filePath + '`', { verbose: true });
-        return this._readFileContents(filePath)
-          .then(restClient.upload.bind(restClient, keyPrefix, revisionKey, revisionData))
-          .then(this._uploadSuccessMessage.bind(this))
-          .then(function (key) {
-            return { key: key };
-          })
-          .catch(this._errorMessage.bind(this));
+
+        if (useHydra) {
+          return this._readFileContents(filePath)
+            .then(restClient.uploadAppRelease.bind(restClient, keyPrefix, revisionKey, appName))
+            .then(this._uploadSuccessMessage.bind(this))
+            .then(function (key) {
+              return { key: key };
+            })
+            .catch(this._errorMessage.bind(this));
+        } else {
+          return this._readFileContents(filePath)
+            .then(restClient.upload.bind(restClient, keyPrefix, revisionKey, revisionData))
+            .then(this._uploadSuccessMessage.bind(this))
+            .then(function (key) {
+              return { key: key };
+            })
+            .catch(this._errorMessage.bind(this));
+        }
       },
 
       willActivate: function (/* context */) {
         var restClient = this.readConfig('restClient');
         var keyPrefix = this.readConfig('keyPrefix');
+        var useHydra = this.readConfig('useHydra');
 
-        var revisionKey = restClient.activeRevision(keyPrefix);
+        var revisionKey = restClient.activeRevision(keyPrefix, useHydra);
 
         return {
           revisionData: {
@@ -94,11 +112,12 @@ module.exports = {
         var restClient = this.readConfig('restClient');
         var revisionKey = this.readConfig('revisionKey');
         var keyPrefix = this.readConfig('keyPrefix');
+        var useHydra = this.readConfig('useHydra');
 
         this.log('Activating revision `' + revisionKey + '`', {
           verbose: true,
         });
-        return Promise.resolve(restClient.activate(keyPrefix, revisionKey))
+        return Promise.resolve(restClient.activate(keyPrefix, revisionKey, useHydra))
           .then(this.log.bind(this, '✔ Activated revision `' + revisionKey + '`', {}))
           .then(function () {
             return {
@@ -120,10 +139,12 @@ module.exports = {
       fetchInitialRevisions: function (/* context */) {
         var restClient = this.readConfig('restClient');
         var keyPrefix = this.readConfig('keyPrefix');
+        var useHydra = this.readConfig('useHydra');
+
         this.log('Listing initial revisions for key: `' + keyPrefix + '`', {
           verbose: true,
         });
-        return Promise.resolve(restClient.fetchRevisions(keyPrefix))
+        return Promise.resolve(restClient.fetchRevisions(keyPrefix, useHydra))
           .then(function (revisions) {
             return {
               initialRevisions: revisions,
@@ -135,9 +156,10 @@ module.exports = {
       fetchRevisions: function (/* context */) {
         var restClient = this.readConfig('restClient');
         var keyPrefix = this.readConfig('keyPrefix');
+        var useHydra = this.readConfig('useHydra');
 
         this.log('Listing revisions for key: `' + keyPrefix + '`');
-        return restClient.fetchRevisions(keyPrefix).catch(this._errorMessage.bind(this));
+        return restClient.fetchRevisions(keyPrefix, useHydra).catch(this._errorMessage.bind(this));
       },
 
       _readFileContents: function (path) {
