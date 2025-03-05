@@ -1,6 +1,6 @@
 {
   "name": "ember-cli-deploy-rest",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Ember CLI Deploy plugin to deploy index.html to a REST API.",
   "author": "Alisdair McDiarmid",
   "directories": {
@@ -31,7 +31,7 @@
   "devDependencies": {
     "chai": "^4.3.4",
     "chai-as-promised": "^7.1.1",
-    "ember-cli": "^3.28.5",
+    "ember-cli": "^5.12.0",
     "eslint": "^8.7.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-ember": "^10.5.8",
