@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: ["16"]
+        node: ["18"]
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_CI_BOT_URL }}
       JOBS: 1
@@ -16,14 +16,14 @@ jobs:
       run:
         shell: bash
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: setup node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
       - name: setup chrome
         uses: browser-actions/setup-chrome@latest
-      - uses: actions/cache@v2
+      - uses: actions/cache@v4
         with:
           path: node_modules
           key: ember-cli-deploy-rest-${{ matrix.node }}-${{ hashFiles('package-lock.json') }}
