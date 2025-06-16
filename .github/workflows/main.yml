@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: ["18"]
+        node: ["18", "22"]
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_CI_BOT_URL }}
       JOBS: 1
@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - name: setup chrome
-        uses: browser-actions/setup-chrome@latest
+        uses: browser-actions/setup-chrome@c785b87e244131f27c9f19c1a33e2ead956ab7ce # latest
       - uses: actions/cache@v4
         with:
           path: node_modules
