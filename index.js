@@ -132,7 +132,7 @@ module.exports = {
         this.log('Activating revision `' + revisionKey + '`', {
           verbose: true,
         });
-        return Promise.resolve(restClient.activate(keyPrefix, appName, revisionKey, useHydra || useServices, useHydra))
+        return Promise.resolve(restClient.activate(keyPrefix, revisionKey, appName, useHydra || useServices, useHydra))
           .then(this.log.bind(this, '✔ Activated revision `' + revisionKey + '`', {}))
           .then(function () {
             return {
