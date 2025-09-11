@@ -80,7 +80,7 @@ module.exports = {
 
         if (useHydra) {
           return this._readFileContents(filePath)
-            .then(restClient.uploadAppRelease.bind(restClient, keyPrefix, revisionKey, appName))
+            .then(restClient.uploadReleaseToHydra.bind(restClient, keyPrefix, revisionKey, appName))
             .then(this._uploadSuccessMessage.bind(this))
             .then(function (key) {
               return { key: key };
@@ -88,7 +88,7 @@ module.exports = {
             .catch(this._errorMessage.bind(this));
         } else if (useServices) {
           return this._readFileContents(filePath)
-            .then(restClient.updateServicesRelease.bind(restClient, keyPrefix, revisionKey, appName))
+            .then(restClient.updateReleaseToServices.bind(restClient, keyPrefix, revisionKey, appName))
             .then(this._uploadSuccessMessage.bind(this))
             .then(function (key) {
               return { key: key };
