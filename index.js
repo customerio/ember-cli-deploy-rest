@@ -178,7 +178,8 @@ module.exports = {
         var useServices = this.readConfig('useServices');
 
         this.log('Listing revisions for key: `' + keyPrefix + '`');
-        return restClient.fetchRevisions(keyPrefix, appName, useHydra || useServices, useHydra)
+        return restClient
+          .fetchRevisions(keyPrefix, appName, useHydra || useServices, useHydra)
           .catch(this._errorMessage.bind(this));
       },
 
