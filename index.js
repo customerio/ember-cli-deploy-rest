@@ -108,6 +108,7 @@ module.exports = {
       willActivate: function (/* context */) {
         var restClient = this.readConfig('restClient');
         var keyPrefix = this.readConfig('keyPrefix');
+        var appName = this.readConfig('appName');
         var useHydra = this.readConfig('useHydra');
         var useServices = this.readConfig('useServices');
 
