@@ -21,7 +21,9 @@ module.exports = {
 
       // eslint-disable-next-line ember/avoid-leaking-state-in-ember-objects
       defaultConfig: {
+        appName: 'journeys',
         useHydra: false,
+        useServices: false,
         useBearerToken: false,
         bearer: undefined,
         filePattern: 'index.html',
@@ -64,6 +66,7 @@ module.exports = {
 
       upload: function () {
         var useHydra = this.readConfig('useHydra');
+        var useServices = this.readConfig('useServices');
         var restClient = this.readConfig('restClient');
         var revisionKey = this.readConfig('revisionKey');
         var distDir = this.readConfig('distDir');
@@ -78,6 +81,14 @@ module.exports = {
         if (useHydra) {
           return this._readFileContents(filePath)
             .then(restClient.uploadAppRelease.bind(restClient, keyPrefix, revisionKey, appName))
+            .then(this._uploadSuccessMessage.bind(this))
+            .then(function (key) {
+              return { key: key };
+            })
+            .catch(this._errorMessage.bind(this));
+        } else if (useServices) {
+          return this._readFileContents(filePath)
+            .then(restClient.updateServicesRelease.bind(restClient, keyPrefix, revisionKey, appName))
             .then(this._uploadSuccessMessage.bind(this))
             .then(function (key) {
               return { key: key };
@@ -98,8 +109,9 @@ module.exports = {
         var restClient = this.readConfig('restClient');
         var keyPrefix = this.readConfig('keyPrefix');
         var useHydra = this.readConfig('useHydra');
+        var useServices = this.readConfig('useServices');
 
-        var revisionKey = restClient.activeRevision(keyPrefix, useHydra);
+        var revisionKey = restClient.activeRevision(keyPrefix, appName, useHydra || useServices, useHydra);
 
         return {
           revisionData: {
@@ -112,12 +124,14 @@ module.exports = {
         var restClient = this.readConfig('restClient');
         var revisionKey = this.readConfig('revisionKey');
         var keyPrefix = this.readConfig('keyPrefix');
+        var appName = this.readConfig('appName');
         var useHydra = this.readConfig('useHydra');
+        var useServices = this.readConfig('useServices');
 
         this.log('Activating revision `' + revisionKey + '`', {
           verbose: true,
         });
-        return Promise.resolve(restClient.activate(keyPrefix, revisionKey, useHydra))
+        return Promise.resolve(restClient.activate(keyPrefix, appName, revisionKey, useHydra || useServices, useHydra))
           .then(this.log.bind(this, '✔ Activated revision `' + revisionKey + '`', {}))
           .then(function () {
             return {
@@ -139,12 +153,14 @@ module.exports = {
       fetchInitialRevisions: function (/* context */) {
         var restClient = this.readConfig('restClient');
         var keyPrefix = this.readConfig('keyPrefix');
+        var appName = this.readConfig('appName');
         var useHydra = this.readConfig('useHydra');
+        var useServices = this.readConfig('useServices');
 
         this.log('Listing initial revisions for key: `' + keyPrefix + '`', {
           verbose: true,
         });
-        return Promise.resolve(restClient.fetchRevisions(keyPrefix, useHydra))
+        return Promise.resolve(restClient.fetchRevisions(keyPrefix, appName, useHydra || useServices, useHydra))
           .then(function (revisions) {
             return {
               initialRevisions: revisions,
@@ -156,10 +172,12 @@ module.exports = {
       fetchRevisions: function (/* context */) {
         var restClient = this.readConfig('restClient');
         var keyPrefix = this.readConfig('keyPrefix');
+        var appName = this.readConfig('appName');
         var useHydra = this.readConfig('useHydra');
+        var useServices = this.readConfig('useServices');
 
         this.log('Listing revisions for key: `' + keyPrefix + '`');
-        return restClient.fetchRevisions(keyPrefix, useHydra).catch(this._errorMessage.bind(this));
+        return restClient.fetchRevisions(keyPrefix, appName, useHydra || useServices, useHydra).catch(this._errorMessage.bind(this));
       },
 
       _readFileContents: function (path) {
