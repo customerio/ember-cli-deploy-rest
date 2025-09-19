@@ -78,26 +78,7 @@ module.exports = {
 
         this.log('Uploading `' + filePath + '`', { verbose: true });
 
-        if (useHydra && useServices) {
-          return this._readFileContents(filePath)
-            .then((fileContents) => {
-              return Promise.all([
-                restClient.uploadReleaseToHydra(keyPrefix, revisionKey, appName, fileContents),
-                restClient.updateReleaseToServices(keyPrefix, revisionKey, appName, fileContents),
-              ]);
-            })
-            .then(([hydraKey, servicesKey]) => {
-              // both keys _should_ be the same
-              if (hydraKey !== servicesKey) {
-                this._uploadSuccessMessage(hydraKey);
-                this._uploadSuccessMessage(servicesKey);
-              } else {
-                this._uploadSuccessMessage(servicesKey);
-              }
-              return { key: servicesKey };
-            })
-            .catch(this._errorMessage.bind(this));
-        } else if (useHydra) {
+        if (useHydra) {
           return this._readFileContents(filePath)
             .then(restClient.uploadReleaseToHydra.bind(restClient, keyPrefix, revisionKey, appName))
             .then(this._uploadSuccessMessage.bind(this))
