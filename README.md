@@ -2,16 +2,26 @@
 
 # ember-cli-deploy-rest
 
-An ember-cli-deploy plugin to upload index.html files to a REST API. This is useful if you wrap your Ember app in a traditional web app, such as Rails.
+A modified ember-cli-deploy plugin to upload index.html files to a REST API. This is useful if you wrap your Ember app in a traditional web app, such as Rails.
 
 ## API requirements
 
-Your REST API should follow the spec below. Note that the base URL is configurable; for these examples we assume it's `https://yourapp.com/ember-revisions`.
+Your REST API should follow the spec below. Note that the base URL is configurable.
+
+The original implementation assumes an example base URL of `https://yourapp.com/ember-revisions`.
 
 - Authenticate with basic auth (please use HTTPS!)
 - `GET /ember-revisions`: returns a JSON array of objects for the stored revisions. Fields are `id` (revision key), `created_at` (upload timestamp), `revision_data` (usually contains revision metadata) and `current` (boolean)
 - `POST /ember-revisions`: expects a JSON body with fields `id` (revision key) and `body` (the index.html contents)
 - `PUT /ember-revisions/<id>`: activates the revision with key `id`
+
+Our Customer.io implementation has slightly different endpoints and parameters.
+
+- Authenticate with basic auth (please use HTTPS!), utilizing the prefix `Bearer`
+- `GET /`: returns a JSON array of objects for all apps (ONLY ON HYDRA, NOT SERVICES)
+- `GET /<app_name>`: returns a JSON array of objects for the specified app
+- `POST /<app_name>`: expects a JSON body with the fields `version` (revision key) and `body` (the index.html contents)
+- `PUT /<app_name>/<version>/activate`: activates the specified app with the specified version
 
 ## Quick Start
 
